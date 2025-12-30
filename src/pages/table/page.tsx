@@ -1,12 +1,14 @@
 import { Container } from "@mui/material";
 import CropsTable from "@/features/table";
+import { Suspense } from "react";
 
 export function TablePage() {
-
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <CropsTable />
-    </Container>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <CropsTable />
+      </Container>
+    </Suspense>
   )
 }
 

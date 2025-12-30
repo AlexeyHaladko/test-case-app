@@ -1,23 +1,26 @@
+import { lazy } from 'react';
 import {
   createBrowserRouter, redirect,
 } from "react-router";
 import authMiddleware from "@/common/auth-middleware.ts";
 import Layout from "@/Layouts/Layout.tsx";
-import { LoginPage } from "@/pages/login/page.tsx";
 import { AuthLayout } from "@/Layouts/AuthLayout.tsx";
-import { TablePage } from "@/pages/table/page.tsx";
-import { FormPage } from "@/pages/form/page.tsx";
 import App from "@/App.tsx";
+import NotFound from "@/pages/not-found/not-found.tsx";
 
 export const PAGE_PATHS = {
-  LOGIN: "/login",
-  DASHBOARD: "/dashboard",
-  FORM: "/form",
+  LOGIN: "login",
+  DASHBOARD: "dashboard",
+  FORM: "form",
 };
+
+const TablePage = lazy(() => import("@/pages/table/page").then(m => ({ default: m.TablePage })));
+const FormPage = lazy(() => import("@/pages/form/page").then(m => ({ default: m.FormPage })));
+const LoginPage = lazy(() => import("@/pages/login/page").then(m => ({ default: m.LoginPage })));
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/test-case-app",
     Component: App,
     children: [
 
@@ -40,6 +43,7 @@ const router = createBrowserRouter([
           { path: PAGE_PATHS.FORM, Component: FormPage },
         ],
       },
+      { path: "*", Component: NotFound },
     ],
   },
 ]);

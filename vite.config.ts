@@ -10,4 +10,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id: string) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('@mui')) return 'mui';
+            if (id.includes('@tanstack')) return 'tanstack';
+            return 'vendor';
+          }
+        },
+      },
+    },
+  },
+  base: "/test-case-app/"
 })

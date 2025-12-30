@@ -7,6 +7,8 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { getAppTheme } from "@/common/theme.ts";
 import { useState, useMemo } from "react";
 import { type ColorMode, ColorModeContext } from "@/common/contexts/theme/color-mode-context.tsx";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorBoundaryFallback from "@/common/components/error-boundary-fallback.tsx";
 
 function App() {
   const [mode, setMode] = useState<ColorMode>('light');
@@ -24,12 +26,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
+          <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
           <CssBaseline />
           <SnackbarProvider>
             <AuthProvider>
               <Outlet />
             </AuthProvider>
           </SnackbarProvider>
+          </ErrorBoundary>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </QueryClientProvider>
