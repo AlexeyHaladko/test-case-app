@@ -1,0 +1,886 @@
+openapi: 3.0.3
+info:
+  title: Frontend Interview API
+  version: 1.0.0
+  description: Backend API for frontend developer interview task
+paths:
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: Authenticate a user with username and password. Returns JWT tokens
+        on success.
+      summary: Login user
+      parameters:
+      - in: query
+        name: simulate_error
+        schema:
+          type: boolean
+        description: Set to true to simulate a server error (for testing)
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: Login successful
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid credentials
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: Logout the current user by blacklisting the refresh token.
+      summary: Logout user
+      parameters:
+      - in: query
+        name: simulate_error
+        schema:
+          type: boolean
+        description: Set to true to simulate a server error (for testing)
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+          description: Logout successful
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid token
+  /api/auth/signup/:
+    post:
+      operationId: auth_signup_create
+      description: Create a new user account with the provided credentials. Returns
+        JWT tokens on success.
+      summary: Register a new user
+      parameters:
+      - in: query
+        name: simulate_error
+        schema:
+          type: boolean
+        description: Set to true to simulate a server error (for testing)
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: User created successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Validation error
+  /api/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/user/:
+    get:
+      operationId: auth_user_retrieve
+      description: Returns the profile information of the currently authenticated
+        user.
+      summary: Get current user profile
+      tags:
+      - Authentication
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User profile
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not authenticated
+  /api/crops/{id}/:
+    get:
+      operationId: crops_retrieve
+      description: Returns detailed information about a specific crop record.
+      summary: Get crop record by ID
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Crop Data
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CropRecord'
+          description: Crop record details
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Record not found
+  /api/form/submit/:
+    post:
+      operationId: form_submit_create
+      description: "\nSubmit a form with 10 input fields. The form includes:\n- **full_name**:
+        Required, 3-100 characters\n- **email**: Required, valid email format\n- **password**:
+        Required, min 8 chars, must contain uppercase, lowercase, and digit\n- **phone**:
+        Optional phone number\n- **age**: Optional, 1-150\n- **website**: Optional
+        URL\n- **bio**: Optional, max 500 characters\n- **country**: Optional country
+        name\n- **agree_terms**: Required, must be true\n- **contact_method**: Required,
+        one of: email, phone, both\n\nIf contact_method is 'phone' or 'both', phone
+        number becomes required.\n        "
+      summary: Submit form data
+      parameters:
+      - in: query
+        name: simulate_error
+        schema:
+          type: boolean
+        description: Set to true to simulate a server error (for testing)
+      tags:
+      - Form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormSubmissionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FormSubmissionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FormSubmissionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormSubmissionResponse'
+          description: Form submitted successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Validation error
+  /api/table/data/:
+    get:
+      operationId: table_data_retrieve
+      description: "\nReturns paginated crop science data for display in a crops.\n\n**Pagination:**\n-
+        `page`: Page number (default: 1)\n- `page_size`: Number of items per page
+        (10, 25, 50, 100) - default: 10\n\n**Filtering:**\n- `crop_name`: Filter by
+        crop name (partial match)\n- `country`: Filter by country (partial match)\n-
+        `region`: Filter by region (partial match)\n- `status`: Filter by status (exact
+        match: planned, planted, growing, flowering, harvested, failed)\n- `variety`:
+        Filter by variety (partial match)\n\n**Sorting:**\n- `ordering`: Field to
+        sort by. Prefix with `-` for descending order.\n  - Options: id, crop_name,
+        variety, country, region, status, planting_date, yield_amount, created_at\n\nThe
+        response includes pagination metadata and a list of crop records.\n        "
+      summary: Get paginated crop data
+      parameters:
+      - in: query
+        name: country
+        schema:
+          type: string
+        description: Filter by country (partial match)
+      - in: query
+        name: crop_name
+        schema:
+          type: string
+        description: Filter by crop name (partial match)
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          enum:
+          - -country
+          - -created_at
+          - -crop_name
+          - -id
+          - -planting_date
+          - -status
+          - -yield_amount
+          - country
+          - created_at
+          - crop_name
+          - id
+          - planting_date
+          - status
+          - yield_amount
+        description: Sort by field (prefix with - for descending)
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: 'Page number (default: 1)'
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+          enum:
+          - 10
+          - 100
+          - 25
+          - 50
+        description: 'Items per page: 10, 25, 50, or 100 (default: 10)'
+      - in: query
+        name: region
+        schema:
+          type: string
+        description: Filter by region (partial match)
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search across crop_name, variety, region, country, researcher_name
+      - in: query
+        name: simulate_error
+        schema:
+          type: boolean
+        description: Set to true to simulate a server error (for testing)
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - failed
+          - flowering
+          - growing
+          - harvested
+          - planned
+          - planted
+        description: Filter by status (exact match)
+      - in: query
+        name: variety
+        schema:
+          type: string
+        description: Filter by variety (partial match)
+      tags:
+      - Crop Data
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCropResponse'
+          description: Paginated crop data
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid parameters
+components:
+  schemas:
+    ContactMethodEnum:
+      enum:
+      - email
+      - phone
+      - both
+      type: string
+      description: |-
+        * `email` - email
+        * `phone` - phone
+        * `both` - both
+    CropRecord:
+      type: object
+      description: Serializer for CropRecord model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        crop_name:
+          type: string
+          maxLength: 100
+        variety:
+          type: string
+          maxLength: 100
+        scientific_name:
+          type: string
+          maxLength: 150
+        field_id:
+          type: string
+          maxLength: 50
+        plot_number:
+          type: string
+          maxLength: 20
+        region:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          maxLength: 100
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,7})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,7})?$
+          nullable: true
+        soil_type:
+          type: string
+          maxLength: 50
+        irrigation_type:
+          type: string
+          maxLength: 50
+        growing_season:
+          type: string
+          maxLength: 50
+        planting_date:
+          type: string
+          format: date
+        expected_harvest_date:
+          type: string
+          format: date
+          nullable: true
+        actual_harvest_date:
+          type: string
+          format: date
+          nullable: true
+        yield_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Yield in kg/hectare
+        yield_quality_grade:
+          type: string
+          maxLength: 10
+        plant_height_cm:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+          nullable: true
+        fertilizer_type:
+          type: string
+          maxLength: 100
+        fertilizer_amount_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+        pesticide_applied:
+          type: boolean
+        pesticide_type:
+          type: string
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        avg_temperature_c:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+          nullable: true
+        total_rainfall_mm:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+        researcher_name:
+          type: string
+          maxLength: 100
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - country
+      - created_at
+      - crop_name
+      - field_id
+      - growing_season
+      - id
+      - irrigation_type
+      - planting_date
+      - plot_number
+      - region
+      - soil_type
+      - updated_at
+      - variety
+    CropRecordList:
+      type: object
+      description: Lightweight serializer for list view (fewer fields for performance).
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        crop_name:
+          type: string
+          maxLength: 100
+        variety:
+          type: string
+          maxLength: 100
+        field_id:
+          type: string
+          maxLength: 50
+        region:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        planting_date:
+          type: string
+          format: date
+        yield_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Yield in kg/hectare
+        yield_quality_grade:
+          type: string
+          maxLength: 10
+        researcher_name:
+          type: string
+          maxLength: 100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - country
+      - created_at
+      - crop_name
+      - field_id
+      - id
+      - planting_date
+      - region
+      - variety
+    ErrorResponse:
+      type: object
+      description: Error response serializer.
+      properties:
+        error:
+          type: string
+        details:
+          type: object
+          additionalProperties: {}
+      required:
+      - error
+    FormSubmission:
+      type: object
+      description: |-
+        Serializer for form submission with 10 input fields.
+        Includes various validation rules for demonstration.
+      properties:
+        full_name:
+          type: string
+          description: Full name (3-100 characters)
+          maxLength: 100
+          minLength: 3
+        email:
+          type: string
+          format: email
+          description: Valid email address
+        phone:
+          type: string
+          description: Phone number (optional)
+          maxLength: 20
+        age:
+          type: integer
+          maximum: 150
+          minimum: 1
+          description: Age (1-150)
+        website:
+          type: string
+          format: uri
+          description: Website URL (optional)
+        bio:
+          type: string
+          description: Short bio (max 500 characters)
+          maxLength: 500
+        country:
+          type: string
+          description: Country name
+          maxLength: 100
+        agree_terms:
+          type: boolean
+          description: Must agree to terms and conditions
+        contact_method:
+          allOf:
+          - $ref: '#/components/schemas/ContactMethodEnum'
+          description: |-
+            Preferred contact method
+
+            * `email` - email
+            * `phone` - phone
+            * `both` - both
+      required:
+      - agree_terms
+      - contact_method
+      - email
+      - full_name
+    FormSubmissionRequest:
+      type: object
+      description: |-
+        Serializer for form submission with 10 input fields.
+        Includes various validation rules for demonstration.
+      properties:
+        full_name:
+          type: string
+          minLength: 3
+          description: Full name (3-100 characters)
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          minLength: 1
+          description: Valid email address
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+          description: Password (minimum 8 characters, must contain uppercase, lowercase,
+            and number)
+          maxLength: 128
+        phone:
+          type: string
+          description: Phone number (optional)
+          maxLength: 20
+        age:
+          type: integer
+          maximum: 150
+          minimum: 1
+          description: Age (1-150)
+        website:
+          type: string
+          format: uri
+          description: Website URL (optional)
+        bio:
+          type: string
+          description: Short bio (max 500 characters)
+          maxLength: 500
+        country:
+          type: string
+          description: Country name
+          maxLength: 100
+        agree_terms:
+          type: boolean
+          description: Must agree to terms and conditions
+        contact_method:
+          allOf:
+          - $ref: '#/components/schemas/ContactMethodEnum'
+          description: |-
+            Preferred contact method
+
+            * `email` - email
+            * `phone` - phone
+            * `both` - both
+      required:
+      - agree_terms
+      - contact_method
+      - email
+      - full_name
+      - password
+    FormSubmissionResponse:
+      type: object
+      description: Response serializer for form submission.
+      properties:
+        message:
+          type: string
+        submission_id:
+          type: string
+        data:
+          $ref: '#/components/schemas/FormSubmission'
+      required:
+      - data
+      - message
+      - submission_id
+    LoginRequest:
+      type: object
+      description: Serializer for user login.
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    LogoutRequest:
+      type: object
+      description: Serializer for logout request.
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    MessageResponse:
+      type: object
+      description: Generic message response serializer.
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    PaginatedCropResponse:
+      type: object
+      description: Serializer for paginated crop data response.
+      properties:
+        count:
+          type: integer
+          description: Total number of items
+        page:
+          type: integer
+          description: Current page number
+        page_size:
+          type: integer
+          description: Number of items per page
+        total_pages:
+          type: integer
+          description: Total number of pages
+        next:
+          type: string
+          format: uri
+          nullable: true
+          description: URL to next page
+        previous:
+          type: string
+          format: uri
+          nullable: true
+          description: URL to previous page
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CropRecordList'
+      required:
+      - count
+      - next
+      - page
+      - page_size
+      - previous
+      - results
+      - total_pages
+    SignupRequest:
+      type: object
+      description: Serializer for user registration.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password_confirm:
+          type: string
+          writeOnly: true
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 2
+          maxLength: 30
+        last_name:
+          type: string
+          minLength: 2
+          maxLength: 30
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+      - password_confirm
+      - username
+    StatusEnum:
+      enum:
+      - planned
+      - planted
+      - growing
+      - flowering
+      - harvested
+      - failed
+      type: string
+      description: |-
+        * `planned` - Planned
+        * `planted` - Planted
+        * `growing` - Growing
+        * `flowering` - Flowering
+        * `harvested` - Harvested
+        * `failed` - Failed
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    TokenResponse:
+      type: object
+      description: Serializer for token response.
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - access
+      - refresh
+      - user
+    User:
+      type: object
+      description: Serializer for user information.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - id
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
