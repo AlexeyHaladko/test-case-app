@@ -1,0 +1,1 @@
+const e={email:`email`,phone:`phone`,both:`both`},t={failed:`failed`,flowering:`flowering`,growing:`growing`,harvested:`harvested`,planned:`planned`,planted:`planted`};export{t as n,e as t};
