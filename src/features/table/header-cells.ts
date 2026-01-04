@@ -1,3 +1,5 @@
+import type { HeadCell } from "./types";
+
 export const HEAD_CELLS: HeadCell[] = [
   {
     field: 'id',

@@ -52,10 +52,6 @@ export function SubmitForm() {
     }
   );
 
-
-  useEffect(() => {
-    showSnackbar("test", "success")
-  }, []);
   return (
     <>
       <form

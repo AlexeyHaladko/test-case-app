@@ -1,8 +1,10 @@
 import { PAGE_PATHS } from "@/routes.ts";
 import { NavLink as RouterNavLink } from "react-router";
 import UserInfo from "@/features/navigation/user-info";
-import { AppBar, Toolbar, Box, styled } from "@mui/material";
+import { AppBar, Toolbar, Box, styled, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, useTheme, useMediaQuery } from "@mui/material";
 import { ThemeToggle } from "@/common/components/theme-toggle";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
 
 const NavLink = styled(RouterNavLink)(({ theme }) => ({
   color: 'inherit',
@@ -19,22 +21,74 @@ const NavLink = styled(RouterNavLink)(({ theme }) => ({
 }));
 
 function NavigationBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prev) => !prev);
+  };
+
+  const navItems = [
+    { label: 'DASHBOARD', path: PAGE_PATHS.DASHBOARD },
+    { label: 'FORM', path: PAGE_PATHS.FORM },
+  ];
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', width: 250 }}>
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item.label} disablePadding>
+            <ListItemButton component={RouterNavLink} to={item.path} sx={{ textAlign: 'center' }}>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <AppBar position="static" color="default" elevation={1}>
       <Toolbar>
-        <Box sx={{ flexGrow: 1, display: 'flex', gap: 2 }}>
-          <NavLink to={PAGE_PATHS.DASHBOARD}>
-            DASHBOARD
-          </NavLink>
-          <NavLink to={PAGE_PATHS.FORM}>
-            FORM
-          </NavLink>
+        {isMobile && (
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+          {navItems.map((item) => (
+            <NavLink key={item.label} to={item.path}>
+              {item.label}
+            </NavLink>
+          ))}
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
           <UserInfo />
           <ThemeToggle />
         </Box>
       </Toolbar>
+
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 }
