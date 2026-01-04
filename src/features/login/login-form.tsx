@@ -1,10 +1,10 @@
 import { Button, Box, Stack } from "@mui/material";
 import { useForm } from "@tanstack/react-form";
 
-import { useAuth } from "@/common/contexts/auth/context";
+import { useAuth } from "@/common/contexts";
 import { loginSchema } from "./schema";
 import { FieldKeys } from "./field-keys";
-import FormField from "@/common/components/form-field.tsx";
+import FormField from "@/common/components/form-field";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -14,7 +14,7 @@ function LoginForm() {
       [FieldKeys.password]: 'Test1234!',
     },
     onSubmit: ({ value }) => {
-      login(value)
+      login(value);
     },
     validators: {
       onChange: loginSchema,

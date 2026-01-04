@@ -1,4 +1,4 @@
-import { useAuth } from "@/common/contexts/auth/context.ts";
+import { useAuth } from "@/common/contexts";
 import { Button, Typography, Stack } from "@mui/material";
 
 function UserInfo() {

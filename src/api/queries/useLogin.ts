@@ -7,7 +7,7 @@ const login = async (payload: LoginRequest): Promise<TokenResponse> => {
   return await post<LoginRequest, TokenResponse>(PATHS.login, payload);
 }
 
-function useLogin(options: UseMutationOptions<TokenResponse, string, LoginRequest> = {}) {
+export function useLogin(options: UseMutationOptions<TokenResponse, string, LoginRequest> = {}) {
   const query = useMutation<TokenResponse, string, LoginRequest>({
     mutationFn: login,
     ...options
@@ -15,5 +15,3 @@ function useLogin(options: UseMutationOptions<TokenResponse, string, LoginReques
 
   return query;
 }
-
-export default useLogin;

@@ -3,10 +3,10 @@ import {
   createBrowserRouter, redirect,
 } from "react-router";
 import authMiddleware from "@/common/auth-middleware.ts";
-import Layout from "@/Layouts/Layout.tsx";
-import { AuthLayout } from "@/Layouts/AuthLayout.tsx";
-import App from "@/App.tsx";
-import NotFound from "@/pages/not-found/not-found.tsx";
+import CommonLayout from "@/layouts/common-layout";
+import { AuthLayout } from "@/layouts/auth-layout";
+import App from "@/App";
+import Page from "@/pages/not-found/page";
 
 export const PAGE_PATHS = {
   LOGIN: "login",
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       },
 
       {
-        Component:  Layout,
+        Component:  CommonLayout,
         middleware: [authMiddleware],
         children: [
           {
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
           { path: PAGE_PATHS.FORM, Component: FormPage },
         ],
       },
-      { path: "*", Component: NotFound },
+      { path: "*", Component: Page },
     ],
   },
 ]);

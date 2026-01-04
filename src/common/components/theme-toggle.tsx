@@ -1,7 +1,7 @@
 import { IconButton, useTheme } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useColorMode } from '@/common/contexts/theme/color-mode-context.tsx';
+import { useColorMode } from '@/common/contexts/color-mode-context';
 
 export function ThemeToggle() {
   const theme = useTheme();

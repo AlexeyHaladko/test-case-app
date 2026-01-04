@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import CropsTable from "@/features/table";
+import { CropsTable } from "@/features/table";
 import { Suspense } from "react";
 
 export function TablePage() {
@@ -11,9 +11,3 @@ export function TablePage() {
     </Suspense>
   )
 }
-
-/*
-* Test Account
-Username: testuser
-Password: Test1234!
-* */

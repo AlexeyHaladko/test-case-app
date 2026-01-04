@@ -1,9 +1,9 @@
 import { Container, Box, Typography } from "@mui/material";
 import { Suspense, useEffect } from "react";
-import { replace, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { PAGE_PATHS } from "@/routes.ts";
-import LoginForm from "@/features/login/login-form.tsx";
-import { useAuth } from "@/common/contexts/auth/context.ts";
+import LoginForm from "@/features/login/login-form";
+import { useAuth } from "@/common/contexts";
 
 export function LoginPage() {
   const { isAuthenticated } = useAuth();

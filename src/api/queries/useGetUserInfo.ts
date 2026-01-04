@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { get } from "@/api/client.ts";
-import { QUERY_KEYS } from "@/api/queryKeys.ts";
+import { QUERY_KEYS } from "@/api/query-keys.ts";
 import { PATHS } from "@/api/paths.ts";
 import type { User } from "@/api/generated.schemas.ts";
 import { getAuthToken } from "@/api/utils.ts";
 
-function useGetUserInfo() {
+export function useGetUserInfo() {
   const token = getAuthToken()
   return useQuery({
     queryKey: [QUERY_KEYS.userInfo],
@@ -15,5 +15,3 @@ function useGetUserInfo() {
     enabled: !!token,
   });
 }
-
-export default useGetUserInfo;

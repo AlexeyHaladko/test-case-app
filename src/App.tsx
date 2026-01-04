@@ -1,14 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router";
-import { AuthProvider } from "@/common/contexts/auth/auth-context.tsx";
-import { SnackbarProvider } from "@/common/contexts/snackbar/snackbar-context.tsx";
-import { queryClient } from "@/common/config.ts";
+import { AuthProvider, SnackbarProvider, ColorModeContext, type ColorMode } from "@/common/contexts";
+import { queryClient } from "@/common/config";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import { getAppTheme } from "@/common/theme.ts";
+import { getAppTheme } from "@/common/theme";
 import { useState, useMemo } from "react";
-import { type ColorMode, ColorModeContext } from "@/common/contexts/theme/color-mode-context.tsx";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorBoundaryFallback from "@/common/components/error-boundary-fallback.tsx";
+import ErrorBoundaryFallback from "@/common/components/error-boundary-fallback";
 
 function App() {
   const [mode, setMode] = useState<ColorMode>('light');

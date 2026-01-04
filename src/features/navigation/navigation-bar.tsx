@@ -1,6 +1,6 @@
 import { PAGE_PATHS } from "@/routes.ts";
 import { NavLink as RouterNavLink } from "react-router";
-import UserInfo from "@/features/navigation/user-info.tsx";
+import UserInfo from "@/features/navigation/user-info";
 import { AppBar, Toolbar, Box, styled } from "@mui/material";
 import { ThemeToggle } from "@/common/components/theme-toggle";
 

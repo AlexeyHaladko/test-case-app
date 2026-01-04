@@ -1,14 +1,16 @@
-import { Button, Stack, MenuItem } from "@mui/material";
-import { z } from "zod";
-import useSubmitForm from "@/api/crops/useFormSubmit.ts";
-import { useForm } from "@tanstack/react-form";
-import { ContactMethodEnum } from "@/api/generated.schemas.ts";
-import { FieldKeys } from "@/features/form/field-keys";
-import { formSchema } from "./schema";
-import FormField from "@/common/components/form-field.tsx";
-import { FORM_FIELD_TYPES } from "@/common/constants.ts";
-import { useSnackbar } from "@/common/contexts/snackbar/snackbar-context";
 import { useEffect } from "react";
+import { z } from "zod";
+import { Button, Stack, MenuItem } from "@mui/material";
+
+import { useForm } from "@tanstack/react-form";
+import { useSubmitForm } from "@/api/queries";
+import { ContactMethodEnum } from "@/api/generated.schemas";
+import FormField from "@/common/components/form-field";
+import { FORM_FIELD_TYPES } from "@/common/constants";
+import { useSnackbar } from "@/common/contexts/snackbar-context";
+
+import { FieldKeys } from "./field-keys";
+import { formSchema } from "./schema";
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -25,7 +27,7 @@ const DEFAULT_VALUES: FormValues = {
   [FieldKeys.agree_terms]: false,
 };
 
-function SubmitForm() {
+export function SubmitForm() {
   const { showSnackbar } = useSnackbar();
 
   const form = useForm({
@@ -75,17 +77,19 @@ function SubmitForm() {
 
           <FormField form={form} name={FieldKeys.bio} label="Bio" formFieldType={FORM_FIELD_TYPES.textarea} />
 
-          <FormField form={form} name={FieldKeys.contact_method} label="Contact Method" formFieldType={FORM_FIELD_TYPES.select}>
+          <FormField form={form} name={FieldKeys.contact_method} label="Contact Method"
+                     formFieldType={FORM_FIELD_TYPES.select}>
             {Object.values(ContactMethodEnum).map((method) => (
               <MenuItem key={method} value={method}>{method}</MenuItem>
             ))}
           </FormField>
-          <FormField form={form} name={FieldKeys.agree_terms} label="Agree Terms" formFieldType={FORM_FIELD_TYPES.checkbox}/>
+          <FormField form={form} name={FieldKeys.agree_terms} label="Agree Terms"
+                     formFieldType={FORM_FIELD_TYPES.checkbox} />
           <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
             {([canSubmit, isSubmitting]) => (
-              <Button 
-                type="submit" 
-                variant="contained" 
+              <Button
+                type="submit"
+                variant="contained"
                 disabled={!canSubmit}
                 loading={isSubmitting}
               >
@@ -98,5 +102,3 @@ function SubmitForm() {
     </>
   )
 }
-
-export default SubmitForm;

@@ -1,9 +1,9 @@
 import { Outlet } from "react-router";
-import ErrorBoundaryFallback from "@/common/components/error-boundary-fallback.tsx";
+import ErrorBoundaryFallback from "@/common/components/error-boundary-fallback";
 import { ErrorBoundary } from "react-error-boundary";
-import NavigationBar from "@/features/navigation/navigation-bar.tsx";
+import NavigationBar from "@/features/navigation/navigation-bar";
 
-function Layout() {
+function CommonLayout() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
@@ -13,4 +13,4 @@ function Layout() {
   )
 }
 
-export default Layout;
+export default CommonLayout;

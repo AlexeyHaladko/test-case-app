@@ -10,7 +10,7 @@ const formSubmitMutationFn = async (payload: FormSubmissionRequest): Promise<For
 }
 
 
-function useSubmitForm(options: UseMutationOptions<FormSubmissionResponse, Error, FormSubmissionRequest> = {}) {
+export function useSubmitForm(options: UseMutationOptions<FormSubmissionResponse, Error, FormSubmissionRequest> = {}) {
   const query = useMutation<FormSubmissionResponse, Error, FormSubmissionRequest>({
     mutationFn: formSubmitMutationFn,
     ...options
@@ -18,5 +18,3 @@ function useSubmitForm(options: UseMutationOptions<FormSubmissionResponse, Error
 
   return query;
 }
-
-export default useSubmitForm;

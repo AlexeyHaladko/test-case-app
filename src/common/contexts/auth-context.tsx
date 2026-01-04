@@ -1,13 +1,23 @@
 import { type PropsWithChildren } from 'react';
-import useGetUserInfo from "@/api/auth/useGetUserInfo.ts";
+
+import { useGetUserInfo, useLogin } from "@/api/queries";
 import { useNavigate } from "react-router";
-import useLogin from "@/api/auth/useLogin.ts";
-import { clearAuthToken, getAuthToken, setAuthToken } from "@/api/utils.ts";
+import { clearAuthToken, getAuthToken, setAuthToken } from "@/api/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "@/api/queryKeys.ts";
-import { PAGE_PATHS } from "@/routes.ts";
-import { AuthContext } from "./context";
-import { useSnackbar } from "@/common/contexts/snackbar/snackbar-context";
+import { QUERY_KEYS } from "@/api/query-keys";
+import { PAGE_PATHS } from "@/routes";
+import { useSnackbar } from "@/common/contexts/snackbar-context";
+import type { LoginRequest, User } from "@/api/generated.schemas";
+import { createContext, useContext } from "react";
+
+interface IAuthContext {
+  user?: User;
+  login: (payload: LoginRequest) => void;
+  logout: () => void;
+  isAuthenticated: boolean;
+  userDataLoading: boolean;
+  loginProcessing: boolean;
+}
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const queryClient = useQueryClient();
@@ -41,4 +51,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const AuthContext = createContext<IAuthContext | null>(null);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

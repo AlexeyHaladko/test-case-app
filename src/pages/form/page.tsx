@@ -1,6 +1,7 @@
-import SubmitForm from "@/features/form";
-import { Box, Container } from "@mui/material";
 import { Suspense } from "react";
+
+import { SubmitForm } from "@/features/form";
+import { Box, Container } from "@mui/material";
 
 export function FormPage() {
   return (

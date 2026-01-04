@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { get } from "@/api/client.ts";
-import { QUERY_KEYS } from "@/api/queryKeys.ts";
+import { QUERY_KEYS } from "@/api/query-keys.ts";
 import { PATHS } from "@/api/paths.ts";
 import { getAuthToken } from "@/api/utils.ts";
 import type { PaginatedCropResponse, TableDataRetrieveParams } from "@/api/generated.schemas.ts";
 
-function useGetTableData(params: TableDataRetrieveParams) {
+export function useGetTableData(params: TableDataRetrieveParams) {
   const token = getAuthToken()
   return useQuery({
     queryKey: [QUERY_KEYS.getTableData, params],
@@ -15,5 +15,3 @@ function useGetTableData(params: TableDataRetrieveParams) {
     enabled: !!token,
   });
 }
-
-export default useGetTableData;

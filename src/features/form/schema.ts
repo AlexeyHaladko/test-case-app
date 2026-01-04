@@ -1,6 +1,7 @@
-import { FieldKeys } from "@/features/form/field-keys.tsx";
-import { ContactMethodEnum } from "@/api/generated.schemas.ts";
 import { z } from "zod";
+
+import { FieldKeys } from "@/features/form/field-keys";
+import { ContactMethodEnum } from "@/api/generated.schemas";
 
 export const formSchema = z.object({
   [FieldKeys.contact_method]: z.enum(ContactMethodEnum),
