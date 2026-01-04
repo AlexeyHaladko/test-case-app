@@ -29,9 +29,7 @@ function SearchByFilter({ tableParams, handleFilterChange}: SearchByFilterProps)
         <Select
           value={tableParams.status || ''}
           label="Status"
-          onChange={(e) => {
-            setTableParams(prev => ({ ...prev, status: e.target.value as TableDataRetrieveStatus, page: 1 }));
-          }}
+          onChange={handleFilterChange("status")}
         >
           <MenuItem value=""><em>None</em></MenuItem>
           {Object.values(TableDataRetrieveStatus).map((status) => (
