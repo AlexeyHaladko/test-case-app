@@ -10,8 +10,8 @@ function LoginForm() {
   const { login } = useAuth();
   const form = useForm({
     defaultValues: {
-      [FieldKeys.username]: 'testuser',
-      [FieldKeys.password]: 'Test1234!',
+      [FieldKeys.username]: "",
+      [FieldKeys.password]: "",
     },
     onSubmit: ({ value }) => {
       login(value);
