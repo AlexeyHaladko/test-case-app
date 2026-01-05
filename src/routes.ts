@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import {
-  createBrowserRouter, redirect,
+  createHashRouter, redirect,
 } from "react-router";
 import authMiddleware from "@/common/auth-middleware.ts";
 import CommonLayout from "@/layouts/common-layout";
@@ -9,18 +9,18 @@ import App from "@/App";
 import Page from "@/pages/not-found/page";
 
 export const PAGE_PATHS = {
-  LOGIN: "login",
-  DASHBOARD: "dashboard",
-  FORM: "form",
+  LOGIN: "/login",
+  DASHBOARD: "/dashboard",
+  FORM: "/form",
 };
 
 const TablePage = lazy(() => import("@/pages/table/page").then(m => ({ default: m.TablePage })));
 const FormPage = lazy(() => import("@/pages/form/page").then(m => ({ default: m.FormPage })));
 const LoginPage = lazy(() => import("@/pages/login/page").then(m => ({ default: m.LoginPage })));
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: "/test-case-app",
+    path: "/",
     Component: App,
     children: [
 
